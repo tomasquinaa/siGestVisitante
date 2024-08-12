@@ -23,8 +23,9 @@ class AuthController extends Controller
         }
 
         return view('auth.login');
-
     }
+
+
 
     // public function authlogin(Request $request)
     // {
@@ -68,9 +69,20 @@ class AuthController extends Controller
         }
     }
 
+    // public function logout()
+    // {
+    //     Auth::logout();
+    //     return redirect(url(''));
+    // }
     public function logout()
     {
+        // Remover todas as informações da sessão
+        session()->flush();
+
+        // Desautenticar o usuário no Laravel
         Auth::logout();
-        return redirect(url(''));
+
+        // Redirecionar para a página de login ou home
+        return redirect('/');
     }
 }

@@ -19,23 +19,44 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [AuthController::class, 'login']);
+// Route::get('/', [AuthController::class, 'login']);
+// Route::post('/login', [AuthController::class, 'authlogin'])->name('auth.login');
+// Route::get('/logout', [AuthController::class, 'logout']);
+
+// Route::get('/dashboard', [DashboardController::class, 'handle']);
+
+
+// // Visitas
+// Route::get('/visits', [VisitanteController::class, 'index'])->name('visits.index');
+// Route::get('/visits-out', [VisitanteController::class, 'indexOut'])->name('visits.indexOut');
+// Route::get('/visits/create', [VisitanteController::class, 'create'])->name('visits.create');
+// Route::post('/visits', [VisitanteController::class, 'store'])->name('visits.store');
+// Route::patch('/visits/{visit}/exit', [VisitanteController::class, 'updateExitTime'])->name('visits.updateExitTime');
+
+// // Departamento
+// Route::get('/departaments', [DepartamentoController::class, 'handleCreate'])->name('departament.create');
+// Route::post('/departaments', [DepartamentoController::class, 'handleStore'])->name('departament.store');
+
+// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authlogin'])->name('auth.login');
 Route::get('/logout', [AuthController::class, 'logout']);
 
-Route::get('/dashboard', [DashboardController::class, 'handle']);
+Route::middleware('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'handle']);
 
+    // Visitas
+    Route::get('/visits', [VisitanteController::class, 'index'])->name('visits.index');
+    Route::get('/visits-out', [VisitanteController::class, 'indexOut'])->name('visits.indexOut');
+    Route::get('/visits/create', [VisitanteController::class, 'create'])->name('visits.create');
+    Route::post('/visits', [VisitanteController::class, 'store'])->name('visits.store');
+    Route::patch('/visits/{visit}/exit', [VisitanteController::class, 'updateExitTime'])->name('visits.updateExitTime');
 
-// Visitas
-Route::get('/visits', [VisitanteController::class, 'index'])->name('visits.index');
-Route::get('/visits-out', [VisitanteController::class, 'indexOut'])->name('visits.indexOut');
-Route::get('/visits/create', [VisitanteController::class, 'create'])->name('visits.create');
-Route::post('/visits', [VisitanteController::class, 'store'])->name('visits.store');
-Route::patch('/visits/{visit}/exit', [VisitanteController::class, 'updateExitTime'])->name('visits.updateExitTime');
-
-// Departamento
-Route::get('/departaments', [DepartamentoController::class, 'handleCreate'])->name('departament.create');
-Route::post('/departaments', [DepartamentoController::class, 'handleStore'])->name('departament.store');
+    // Departamento
+    Route::get('/departaments', [DepartamentoController::class, 'handleCreate'])->name('departament.create');
+    Route::post('/departaments', [DepartamentoController::class, 'handleStore'])->name('departament.store');
+});
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
