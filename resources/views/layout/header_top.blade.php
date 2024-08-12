@@ -12,7 +12,7 @@
                     </li>
                     <li class="nav-item dropdown header-profile">
                         <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                            <i class="mdi mdi-account"></i>
+                            <img src="{{ session('user_photo') }}" alt="User Photo" class="rounded-circle" style="width: 30px; height: 30px;">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                     

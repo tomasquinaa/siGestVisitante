@@ -23,7 +23,7 @@ class AuthController extends Controller
         }
 
         return view('auth.login');
-        
+
     }
 
     // public function authlogin(Request $request)
@@ -60,6 +60,7 @@ class AuthController extends Controller
             // Armazenar o token e o nome na sessão
             session(['api_token' => $response['access_token']]);
             session(['user_name' => $response['user']['shortname']]);
+            session(['user_photo' => $response['user']['photo']]);
 
             return redirect('dashboard');
         } catch (\Exception $e) {
