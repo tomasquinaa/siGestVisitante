@@ -13,45 +13,44 @@
 </head>
 
 <body class="h-100">
+
     <div class="authincation h-100">
-        <div class="container-fluid h-100">
-            <div class="row justify-content-center h-100 align-items-center">
-                <div class="col-md-6">
-                    <div class="authincation-content">
-                        <div class="row no-gutters">
-                            <div class="col-xl-12">
-                                <div class="auth-form">
-                                    <h4 class="text-center mb-4">Sistema Visitante</h4>
+        <div class="container h-100 d-flex justify-content-center align-items-center">
+            <div class="authincation-content col-md-4">
+                <div class="row no-gutters">
+                    <div class="col-xl-12">
+                        <div class="auth-form">
+                            <h4 class="text-center mb-4">Sistema Visitante</h4>
 
-                                    <!-- Exibir mensagem de erro, se houver -->
-                                    @if (session('error'))
-                                        <div class="alert alert-danger">
-                                            {{ session('error') }}
-                                        </div>
-                                    @endif
-
-                                    <form action="{{ url('/login') }}" method="post">
-                                        @csrf 
-                                        <div class="form-group">
-                                            <label><strong>Email</strong></label>
-                                            <input type="text" class="form-control" name="email" value="{{ old('email') }}">
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Password</strong></label>
-                                            <input type="password" class="form-control" name="password" required>
-                                        </div>
-                                        <div class="text-center">
-                                            <button type="submit" class="btn btn-primary btn-block">Log In</button>
-                                        </div>
-                                    </form>
+                            <!-- Exibir mensagem de erro, se houver -->
+                            @if (session('error'))
+                                <div class="alert alert-danger">
+                                    {{ session('error') }}
                                 </div>
-                            </div>
+                            @endif
+
+                            <form action="{{ url('/login') }}" method="post">
+                                @csrf
+                                <div class="form-group">
+                                    <label><strong>Email</strong></label>
+                                    <input type="text" class="form-control" name="email"
+                                        value="{{ old('email') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label><strong>Password</strong></label>
+                                    <input type="password" class="form-control" name="password" required>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 
     <!--**********************************
         Scripts
