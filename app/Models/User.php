@@ -17,10 +17,27 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    public $incrementing = false;
+    public $timestamps = false;
+
     protected $fillable = [
+        'id',
         'name',
         'email',
+        'shortname',
         'password',
+        'occupation',
+        'picture',
+        'photo',
+        'doc_number',
+        'gr_admin',
+        'hire_date',
+        'phone',
+        'access_token',
+        'token_type',
+        'expires_in',
+        'ends_at',
+        'dw_cookies'
     ];
 
     /**
@@ -40,5 +57,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'dw_cookies' => 'array', // Assuming dw_cookies is an array or JSON object
+        'ends_at' => 'datetime',
     ];
 }
