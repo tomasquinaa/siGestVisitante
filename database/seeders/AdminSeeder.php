@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -14,8 +15,9 @@ class AdminSeeder extends Seeder
      */
     public function run(): void
     {
-        User::insert([
-			['name' => 'Armando Quinanga', 'email' => 'armando.quinanga@rcsangola.com', 'password' => Hash::make('12345678'),],
+        Admin::insert([
+			['id' => 's22039', 'name' => 'Armando Quinanga'],
+			['id' => 's23019', 'name' => 'Samuel Freitas'],
 		]);
     }
 }

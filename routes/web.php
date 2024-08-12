@@ -44,7 +44,7 @@ Route::post('/login', [AuthController::class, 'authlogin'])->name('auth.login');
 Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::middleware('admin')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'handle']);
+    Route::get('/dashboard', [DashboardController::class, 'handle'])->name('home');
 
     // Visitas
     Route::get('/visits', [VisitanteController::class, 'index'])->name('visits.index');

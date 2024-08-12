@@ -26,9 +26,13 @@ class DashboardController extends Controller
         $departmentWithMostVisits = Visit::select('department_id', DB::raw('count(*) as total'))
             ->groupBy('department_id')
             ->orderBy('total', 'desc')
-            ->first()
-            ->department()
             ->first();
+
+            if ($departmentWithMostVisits) {
+                $departmentWithMostVisits = $departmentWithMostVisits->department;
+            } else {
+                $departmentWithMostVisits = null; // Ou algum valor padrão se preferir
+            }
 
         // Preparando os labels e dados para o gráfico
         $labels = $visits->map(function ($visit) {
