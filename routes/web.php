@@ -25,6 +25,7 @@ Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::get('/dashboard', [DashboardController::class, 'handle']);
 
+
 // Visitas
 Route::get('/visits', [VisitanteController::class, 'index'])->name('visits.index');
 Route::get('/visits-out', [VisitanteController::class, 'indexOut'])->name('visits.indexOut');
@@ -35,6 +36,8 @@ Route::patch('/visits/{visit}/exit', [VisitanteController::class, 'updateExitTim
 // Departamento
 Route::get('/departaments', [DepartamentoController::class, 'handleCreate'])->name('departament.create');
 Route::post('/departaments', [DepartamentoController::class, 'handleStore'])->name('departament.store');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::group(['middleware' => 'admin'], function () {
@@ -53,3 +56,8 @@ Route::group(['middleware' => 'admin'], function () {
 // Route::post('/departaments', [DepartamentoController::class, 'handleStore'])->name('departament.store');
 
 });
+
+
+// Route::get('/login', function () {
+//    return view('auth.login');
+// })->name('login');

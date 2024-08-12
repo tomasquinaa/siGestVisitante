@@ -16,6 +16,7 @@
     <!-- Datatable -->
     <link href="{{ url('assets/vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
 
+
 </head>
 
 <body>
@@ -117,9 +118,11 @@
 
     <script src="{{ url('assets/js/dashboard/dashboard-2.js') }}"></script>
 
-      <!-- Datatable -->
-      <script src="{{ url('assets/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
-      <script src="{{ url('assets/js/plugins-init/datatables.init.js') }}"></script>
+    <!-- Datatable -->
+    <script src="{{ url('assets/vendor/datatables/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url('assets/js/plugins-init/datatables.init.js') }}"></script>
+
+
 
     <!-- Circle progress -->
 
@@ -135,6 +138,8 @@
         });
     </script>
     <!-- Fim Função quando selecionar departamento apareça o input da pessoa relacionada -->
+
+
 
 </body>
 

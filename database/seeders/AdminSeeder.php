@@ -15,7 +15,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::insert([
-			['name' => 'Armando Quinanga', 'email' => 'armando.quinanga@rcsangola.com', 'password' => Hash::make('Zendaya2021'),],
+			['name' => 'Armando Quinanga', 'email' => 'armando.quinanga@rcsangola.com', 'password' => Hash::make('12345678'),],
 		]);
     }
 }
