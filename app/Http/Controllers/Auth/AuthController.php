@@ -25,6 +25,27 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
+    // public function authlogin(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|string',
+    //         'password' => 'required|string',
+    //     ]);
+
+    //     try {
+    //         $response = $this->authService->login($request->email, $request->password);
+
+    //         dd($response);
+
+    //         // Armazenar o token na sessão
+    //         session(['api_token' => $response['access_token']]);
+
+    //         return redirect('dashboard');
+
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('error', 'Invalid email or password');
+    //     }
+    // }
     public function authlogin(Request $request)
     {
         $request->validate([
@@ -35,13 +56,11 @@ class AuthController extends Controller
         try {
             $response = $this->authService->login($request->email, $request->password);
 
-           // dd($response);
-
-            // Armazenar o token na sessão
+            // Armazenar o token e o nome na sessão
             session(['api_token' => $response['access_token']]);
+            session(['user_name' => $response['user']['shortname']]);
 
             return redirect('dashboard');
-
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid email or password');
         }
