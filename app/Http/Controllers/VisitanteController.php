@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Department;
 use App\Models\Visit;
 use App\Models\Visitor;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class VisitanteController extends Controller
@@ -22,17 +23,45 @@ class VisitanteController extends Controller
 
     public function index(Visit $visit)
     {
+
         $visits = Visit::with('department')->whereNull('exit_time')->get();
+
         return view('visitantes.index', compact('visits'));
     }
 
-    public function indexOut(Visit $visit)
+    // public function indexOut(Visit $visit)
+    // {
+    //     $visits = $visit->all();
+
+    //     return view('visitantes.registo_saida', compact('visits'));
+    // }
+    public function indexOut(Request $request, Visit $visit)
     {
-        $visits = $visit->all();
+        $query = $visit->newQuery();
+
+        // Filtra por data de entrada, se fornecida
+        if ($request->filled('created_at')) {
+            $query->whereDate('created_at', $request->input('created_at'));
+        }
+
+        // Obtém os resultados filtrados
+        $visits = $query->get();
 
         return view('visitantes.registo_saida', compact('visits'));
     }
 
+    // Gerar PDF
+    public function gerarPdf(Request $request)
+    {
+        $visits = Visit::orderByDesc('created_at')->get();
+
+        $pdf = Pdf::loadView('visitantes.gerar-pdf', [
+            'visits' => $visits
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download('listar_visita.pdf');
+
+    }
 
 
     public function create()

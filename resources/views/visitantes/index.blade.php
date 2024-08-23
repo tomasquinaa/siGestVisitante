@@ -7,6 +7,15 @@
                 <h4 class="card-title">Listagem dos Visitantes na Instalações da RCS - Angola</h4>
             </div>
             <div class="card-body">
+                <!-- Preloader -->
+                <div id="preloader" style="display: none;">
+                    <div class="sk-three-bounce">
+                        <div class="sk-child sk-bounce1"></div>
+                        <div class="sk-child sk-bounce2"></div>
+                        <div class="sk-child sk-bounce3"></div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table id="example2" class="display" style="width:100%">
                         <thead>
@@ -32,10 +41,13 @@
                                     <td>{{ $visit->department ? $visit->department->name : 'N/A' }}</td>
                                     <td>{{ $visit->related_person }}</td>
                                     <td>
-                                        <form action="{{ route('visits.updateExitTime', $visit) }}" method="POST">
+                                        <form id="visitForm" action="{{ route('visits.updateExitTime', $visit) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="btn btn-warning text-white"><i class="fa fa-download color-warning"></i> Registar Saída</button>
+                                            <div class="sweetalert mt-5">
+                                                <button type="submit" class="btn btn-warning sweet-confirm text-white"><i
+                                                        class="fa fa-download color-warning"></i> Registar Saída</button>
+                                            </div>
                                         </form>
                                     </td>
 
@@ -49,5 +61,6 @@
             </div>
         </div>
     </div>
-@endsection
 
+
+@endsection

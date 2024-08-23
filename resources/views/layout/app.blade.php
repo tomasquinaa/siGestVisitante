@@ -6,16 +6,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>SisVisitante</title>
+    <title>SiGeVisitante</title>
 
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
     <link href="{{ url('assets/vendor/pg-calendar/css/pignose.calendar.min.css') }}" rel="stylesheet">
     <link href="{{ url('assets/vendor/chartist/css/chartist.min.css') }}" rel="stylesheet">
     <link href="{{ url('assets/css/style.css') }}" rel="stylesheet">
+    <link href="{{ url('assets/css/preloader.css') }}" rel="stylesheet">
+
     <!-- Datatable -->
     <link href="{{ url('assets/vendor/datatables/css/jquery.dataTables.min.css') }}" rel="stylesheet">
-
 
 </head>
 
@@ -115,7 +116,6 @@
     <script src="{{ url('assets/vendor/moment/moment.min.js') }}"></script>
     <script src="{{ url('assets/vendor/pg-calendar/js/pignose.calendar.min.js') }}"></script>
 
-
     <script src="{{ url('assets/js/dashboard/dashboard-2.js') }}"></script>
 
     <!-- Datatable -->
@@ -139,7 +139,20 @@
     </script>
     <!-- Fim Função quando selecionar departamento apareça o input da pessoa relacionada -->
 
+    <!-- Preloader para cadastro -->
+    <script>
+        document.getElementById('visitForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede a submissão automática
+            document.getElementById('preloader').style.display = 'flex'; // Exibe o preloader
 
+            setTimeout(() => {
+                this.submit(); // Submete o formulário após o atraso
+            }, 1000); // 1 segundos de atraso para simular o carregamento
+        });
+    </script>
+
+
+    <!-- Fim Preloader para cadastro -->
 
 </body>
 

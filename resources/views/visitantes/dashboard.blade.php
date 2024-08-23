@@ -1,16 +1,23 @@
 @extends('layout.app')
 
 @section('content')
-
-
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Cadastrar Visitas</h4>
         </div>
         <div class="card-body">
+            <!-- Preloader -->
+            <div id="preloader" style="display: none;">
+                <div class="sk-three-bounce">
+                    <div class="sk-child sk-bounce1"></div>
+                    <div class="sk-child sk-bounce2"></div>
+                    <div class="sk-child sk-bounce3"></div>
+                </div>
+            </div>
+
             <div class="basic-form">
-                <form action="{{ route('visits.store') }}" method="POST">
-                    @csrf <!-- Token CSRF necessário para segurança -->
+                <form id="visitForm" action="{{ route('visits.store') }}" method="POST">
+                    @csrf 
 
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -77,14 +84,4 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('departmentSelect').addEventListener('change', function() {
-            var relatedPersonDiv = document.getElementById('relatedPersonDiv');
-            if (this.value) {
-                relatedPersonDiv.style.display = 'block';
-            } else {
-                relatedPersonDiv.style.display = 'none';
-            }
-        });
-    </script>
 @endsection

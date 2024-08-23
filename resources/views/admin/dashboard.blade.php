@@ -55,46 +55,5 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Gráfico de Visitantes Ativos</h4>
-                </div>
-                <div class="card-body">
-                    <canvas id="barChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Gráfico --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('barChart').getContext('2d');
-
-        const chartData = @json($chartData);
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: chartData.labels,
-                datasets: [{
-                    label: 'Visitantes Ativos',
-                    data: chartData.data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        stacked: true,
-                    },
-                    y: {
-                        stacked: true
-                    }
-                }
-            }
-        });
-    </script>
+ 
 @endsection

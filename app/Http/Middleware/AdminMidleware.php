@@ -14,32 +14,23 @@ class AdminMidleware
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    // public function handle(Request $request, Closure $next): Response
-    // {
-    //    // dd(Auth::user(), session()->all());
-    //     if (Auth::check()) {
-    
-    //         return $next($request);
-          
-    //     } else {
-    //         Auth::logout();
-    //         return redirect('/')->with('error', 'Acesso negado.');
-    //     }
-    // }
+   
 
-    public function handle(Request $request, Closure $next)
+
+    public function handle(Request $request, Closure $next): Response
     {
-        // Verificar se o token está na sessão
-        if (!session('api_token')) {
-            return redirect()->route('login');
+        if (Auth::check())
+        {
+           $user = Auth::user();
+           if($user->hasRole(['Super','Admin'])) {
+            return $next($request);
+           }
+
+            abort(403, "User does not have correct ROLE");
+
         }
 
-        // Opcional: Autenticar o usuário com base no ID do usuário armazenado na sessão
-        if (session('user')) {
-            Auth::loginUsingId(session('user')['id']);
-        }
-
-        return $next($request);
+        abort(401);
     }
 }
 

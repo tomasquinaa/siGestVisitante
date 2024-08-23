@@ -7,7 +7,7 @@
         </div>
         <div class="card-body">
             <div class="basic-form">
-                <form action="{{ route('departament.store')}}" method="POST">
+                <form id="visitForm" action="{{ route('departament.store')}}" method="POST">
                     @csrf 
 
                     <div class="form-row">

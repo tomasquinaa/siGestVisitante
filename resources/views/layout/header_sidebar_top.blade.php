@@ -1,5 +1,5 @@
 <div class="nav-header">
-    <a href="index.html" class="brand-logo">
+    <a href="#" class="brand-logo">
         <img class="logo-abbr" src="{{ url ('assets/images/logo.png') }}" alt="">
         &nbsp;&nbsp;&nbsp;
         <h2 class="text-white text-xl font-bold">RCS Angola</h2>

@@ -58,12 +58,16 @@ class AuthController extends Controller
         try {
             $response = $this->authService->login($request->email, $request->password);
 
+            // dd($response);
             // Armazenar o token e o nome na sessão
-            session(['api_token' => $response['access_token']]);
-            session(['user_name' => $response['user']['shortname']]);
-            session(['user_photo' => $response['user']['photo']]);
+            if ($response) {
+                session(['api_token' => $response['access_token']]);
+                session(['user_name' => $response['user']['shortname']]);
+                session(['user_photo' => $response['user']['photo']]);
+            }
 
             return redirect('dashboard');
+
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid email or password');
         }
