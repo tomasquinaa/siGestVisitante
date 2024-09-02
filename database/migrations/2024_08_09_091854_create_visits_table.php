@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             // $table->foreignId('department_id')->constrained('departments')->onDelete('cascade'); obrigatorio
             $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null');
+            $table->foreignId('company_id')->constrained('companies')->onDelete('cascade');
             $table->string('name');
             $table->string('document_number');
             $table->string('contact')->nullable();

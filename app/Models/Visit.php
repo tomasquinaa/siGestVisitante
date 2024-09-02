@@ -19,10 +19,17 @@ class Visit extends Model
         'pass_given',
         'entry_time',
         'exit_time',
+        'department_id',
+        'company_id',
     ];
 
     public function department()
     {
        return $this->belongsTo(Department::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Companies::class);
     }
 }

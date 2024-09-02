@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\AuthenticationController;
+use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\PermissionController;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AuthenticationController::class, 'login'])->name('login');
 Route::post('/login', [AuthenticationController::class, 'authlogin'])->name('auth.login');
+
 
 // Route::group(['middleware' => ['role:Super|Admin']], function () { - Essa parte colocamos na middleware AdminMiddleware
 Route::group(['middleware' => ['isAdmin']], function () {
@@ -45,11 +47,21 @@ Route::group(['middleware' => ['isAdmin']], function () {
     Route::post('/visits', [VisitanteController::class, 'store'])->name('visits.store');
     Route::patch('/visits/{visit}/exit', [VisitanteController::class, 'updateExitTime'])->name('visits.updateExitTime');
 
+    // Companies
+    Route::get('/empresas', [CompaniesController::class, 'handleIndex'])->name('companies.index');
+    Route::get('/empresas/create', [CompaniesController::class, 'handleCreate'])->name('companies.create');
+    Route::get('/empresas/{id}', [CompaniesController::class, 'handleShow'])->name('companies.show');
+    Route::put('/companies/{id}', [CompaniesController::class, 'handleUpdate'])->name('companies.update');
+    Route::get('/empresas/{id}/edit', [CompaniesController::class, 'handleEdit'])->name('companies.edit');
+    Route::delete('/empresas/{id}', [CompaniesController::class, 'handleDestroy'])->name('companies.destroy');
+    Route::post('/empresas/registar-empresas', [CompaniesController::class, 'handleStore'])->name('companies.store');
+
     // Gerar PDF
     Route::get('/gerar-pdf-visits-out', [VisitanteController::class, 'gerarPdf'])->name('visits.gerarpdf');
 
     // Departamento
-    Route::get('/departaments', [DepartamentoController::class, 'handleCreate'])->name('departament.create');
+    Route::get('/departaments-listagem', [DepartamentoController::class, 'handleIndex'])->name('departament.index');
+    Route::get('/departaments-criar', [DepartamentoController::class, 'handleCreate'])->name('departament.create');
     Route::post('/departaments', [DepartamentoController::class, 'handleStore'])->name('departament.store');
 });
 

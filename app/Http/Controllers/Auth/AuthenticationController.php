@@ -26,6 +26,12 @@ class AuthenticationController extends Controller
             ]);
         }
 
+        // Se a autenticação for bem-sucedida, obtém o usuário autenticado
+        $user = Auth::user();
+
+        // Debug: Exibe o usuário autenticado e termina a execução
+      //  dd($user);
+
         return redirect('dashboard');
     }
 

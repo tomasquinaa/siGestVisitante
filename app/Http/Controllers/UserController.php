@@ -10,17 +10,32 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:view user', ['only' => ['index']]);
-        $this->middleware('permission:create user', ['only' => ['create','store']]);
-        $this->middleware('permission:update user', ['only' => ['update','edit']]);
-        $this->middleware('permission:delete user', ['only' => ['destroy']]);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('permission:view user', ['only' => ['index']]);
+    //     $this->middleware('permission:create user', ['only' => ['create', 'store']]);
+    //     $this->middleware('permission:update user', ['only' => ['update', 'edit']]);
+    //     $this->middleware('permission:delete user', ['only' => ['destroy']]);
+    // }
 
     public function index()
     {
-        $users = User::get();
+        // $users = User::get();
+        // return view('role-permission.user.index', [
+        //     'users' => $users
+        // ]);
+
+        // Obtém o usuário autenticado
+        $authUser = auth()->user();
+
+        // Verifica se o usuário autenticado tem uma empresa associada
+        if (!$authUser->company_id) {
+            return redirect('/')->withErrors('Your account does not belong to any company.');
+        }
+
+        // Obtém todos os usuários da mesma empresa
+        $users = User::where('company_id', $authUser->company_id)->get();
+
         return view('role-permission.user.index', [
             'users' => $users
         ]);
@@ -41,30 +56,38 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|max:20',
-            'roles' => 'required|array'
+            'roles' => 'required|array',
+
         ]);
+
+        $authUser = auth()->user();
+
+        // Verifica se o usuário autenticado tem uma empresa associada
+        if (!$authUser->company_id) {
+            return redirect('/users')->withErrors('Your account does not belong to any company.');
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'company_id' => $authUser->company_id // Associa o usuário à mesma empresa do usuário autenticado
         ]);
 
         // Verifique o ID do usuário criado
-       // dd($user->id);
-       //dd($request->roles);
-       
-       $user->syncRoles($request->roles);
+        // dd($user->id);
+        //dd($request->roles);
+
+        $user->syncRoles($request->roles);
 
         return redirect('/users')->with('status', 'User created successfully with roles');
-
     }
 
     public function edit(User $user)
     {
-        $roles = Role::pluck('name','name')->all();
-        $userRoles = $user->roles->pluck('name','name')->all();
-        return view('role-permission.user.edit',[
+        $roles = Role::pluck('name', 'name')->all();
+        $userRoles = $user->roles->pluck('name', 'name')->all();
+        return view('role-permission.user.edit', [
             'user' => $user,
             'roles' => $roles,
             'userRoles' => $userRoles
@@ -84,7 +107,7 @@ class UserController extends Controller
             'email' => $request->email,
         ];
 
-        if(!empty($request->password)){
+        if (!empty($request->password)) {
             $data += [
                 'password' => Hash::make($request->password)
             ];
@@ -104,8 +127,4 @@ class UserController extends Controller
 
         return redirect('/users')->with('status', 'User Delete successfully');
     }
-
-
 }
-
-

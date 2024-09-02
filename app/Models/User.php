@@ -26,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'company_id',
         'shortname',
         'occupation',
         'picture',
@@ -61,4 +62,9 @@ class User extends Authenticatable
         'dw_cookies' => 'array', // Assuming dw_cookies is an array or JSON object
         'ends_at' => 'datetime',
     ];
+
+    public function company()
+    {
+        return $this->belongsTo(Companies::class, 'company_id');
+    }
 }

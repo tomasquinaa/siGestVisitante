@@ -22,9 +22,11 @@ class AdminMidleware
         if (Auth::check())
         {
            $user = Auth::user();
-           if($user->hasRole(['Super','Admin'])) {
+           if($user->hasRole(['Super','Admin', 'User'])) {
             return $next($request);
            }
+
+       
 
             abort(403, "User does not have correct ROLE");
 

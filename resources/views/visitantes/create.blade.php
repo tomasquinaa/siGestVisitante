@@ -1,6 +1,8 @@
 @extends('layout.app')
 
 @section('content')
+
+
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Cadastrar Visitas</h4>

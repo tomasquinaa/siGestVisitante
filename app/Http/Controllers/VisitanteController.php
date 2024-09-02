@@ -23,8 +23,21 @@ class VisitanteController extends Controller
 
     public function index(Visit $visit)
     {
+        // Obtém o usuário autenticado
+        $authUser = auth()->user();
 
-        $visits = Visit::with('department')->whereNull('exit_time')->get();
+        // Verifica se o usuário autenticado tem uma empresa associada
+        if (!$authUser->company_id) {
+            return redirect()->back()->withErrors('User is not associated with any company.');
+        }
+
+        // Busca as visitas que estão associadas à empresa do usuário autenticado e que ainda não finalizaram (exit_time é NULL)
+        $visits = Visit::with('department')
+            ->where('company_id', $authUser->company_id)
+            ->whereNull('exit_time')
+            ->get();
+
+        //  $visits = Visit::with('department')->whereNull('exit_time')->get();
 
         return view('visitantes.index', compact('visits'));
     }
@@ -37,7 +50,18 @@ class VisitanteController extends Controller
     // }
     public function indexOut(Request $request, Visit $visit)
     {
+        // Obtém o usuário autenticado
+        $authUser = auth()->user();
+
+        // Verifica se o usuário autenticado tem uma empresa associada
+        if (!$authUser->company_id) {
+            return redirect()->back()->withErrors('User is not associated with any company.');
+        }
+
         $query = $visit->newQuery();
+
+        // Adiciona filtro para a empresa associada
+        $query->where('company_id', $authUser->company_id);
 
         // Filtra por data de entrada, se fornecida
         if ($request->filled('created_at')) {
@@ -53,14 +77,26 @@ class VisitanteController extends Controller
     // Gerar PDF
     public function gerarPdf(Request $request)
     {
-        $visits = Visit::orderByDesc('created_at')->get();
+        // Obtém o usuário autenticado
+        $authUser = auth()->user();
+
+        // Verifica se o usuário autenticado tem uma empresa associada
+        if (!$authUser->company_id) {
+            return redirect()->back()->withErrors('User is not associated with any company.');
+        }
+
+        // $visits = Visit::orderByDesc('created_at')->get();
+
+        // Filtra as visitas associadas à empresa do usuário
+        $visits = Visit::where('company_id', $authUser->company_id)
+            ->orderByDesc('created_at')
+            ->get();
 
         $pdf = Pdf::loadView('visitantes.gerar-pdf', [
             'visits' => $visits
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download('listar_visita.pdf');
-
     }
 
 
@@ -69,11 +105,19 @@ class VisitanteController extends Controller
         $departaments = Department::all();  // Adiciona essa linha para buscar todos os visitantes
 
         // dd($visitors);
-        return view('visitantes.dashboard', compact('departaments'));
+        return view('visitantes.create', compact('departaments'));
     }
 
     public function store(Request $request)
     {
+        // Obtém o usuário autenticado
+        $authUser = auth()->user();
+
+        // Verifica se o usuário autenticado tem uma empresa associada
+        if (!$authUser->company_id) {
+            return redirect()->back()->withErrors('User is not associated with any company.');
+        }
+
         // Validação dos dados
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -86,6 +130,9 @@ class VisitanteController extends Controller
             'exit_time' => 'nullable|date_format:H:i',
             'department_id' => 'nullable|exists:departments,id', // Atualizado para não obrigatório
         ]);
+
+        // Adiciona o company_id ao array de dados validados
+        $validatedData['company_id'] = $authUser->company_id;
 
         // Criação do registro de visita
         $visit = Visit::create($validatedData);

@@ -19404,3 +19404,10 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
       color: #fff; }
 
 /*# sourceMappingURL=style.css.map */
+
+.custom-img {
+  width: 120px; /* Ajuste o tamanho conforme necessário */
+  height: 80px; /* Ajuste o tamanho conforme necessário */
+  object-fit: cover; /* Melhora o enquadramento da imagem */
+  border-radius: 8px; /* Altere o valor conforme o design */
+}

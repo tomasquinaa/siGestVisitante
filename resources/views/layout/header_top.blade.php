@@ -8,7 +8,7 @@
 
                 <ul class="navbar-nav header-right">
                     <li class="nav-item dropdown notification_dropdown">
-                        <h6>{{ session('user_name', 'Usuário') }}</h6>
+                        <h6>{{ auth()->user()->name }}</h6>
                     </li>
                     <li class="nav-item dropdown header-profile">
                         <a class="nav-link" href="#" role="button" data-toggle="dropdown">

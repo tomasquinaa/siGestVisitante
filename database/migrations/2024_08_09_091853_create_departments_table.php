@@ -12,9 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('departments', function (Blueprint $table) {
-            $table->id(); // ID autoincrementável
-            $table->string('name'); // Nome do departamento
-            $table->timestamps(); // Colunas created_at e updated_at
+            $table->id(); 
+            $table->string('name'); 
+            $table->unsignedBigInteger('company_id')->nullable();
+            $table->timestamps(); 
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
+            
         });
     }
 
