@@ -4,13 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\LogAcesso;
 use App\Models\Visit;
 use App\Models\Visitor;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;
+
 
 class VisitanteController extends Controller
 {
+    private $agent;
+
+    public function __construct()
+    {
+        $this->agent = new Agent();
+    }
+
     // public function index(Visit $visit)
     // {
     //     //$visits = $visit->all();
@@ -21,7 +32,7 @@ class VisitanteController extends Controller
     //     return view('visitantes.index', compact('visits'));
     // }
 
-    public function index(Visit $visit)
+    public function index(Visit $visit, Request $request)
     {
         // Obtém o usuário autenticado
         $authUser = auth()->user();
@@ -39,15 +50,23 @@ class VisitanteController extends Controller
 
         //  $visits = Visit::with('department')->whereNull('exit_time')->get();
 
-        return view('visitantes.index', compact('visits'));
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+           // 'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' acessou a lista dos visitantes ativos na RCS ' ,
+        ]);
+
+        return view('admin.visitantes.index', compact('visits'));
     }
 
-    // public function indexOut(Visit $visit)
-    // {
-    //     $visits = $visit->all();
-
-    //     return view('visitantes.registo_saida', compact('visits'));
-    // }
+    
     public function indexOut(Request $request, Visit $visit)
     {
         // Obtém o usuário autenticado
@@ -71,7 +90,20 @@ class VisitanteController extends Controller
         // Obtém os resultados filtrados
         $visits = $query->get();
 
-        return view('visitantes.registo_saida', compact('visits'));
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+          //  'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' Acesso a lista de entrada e saída de visitante ' ,
+        ]);
+
+        return view('admin.visitantes.registo_saida', compact('visits'));
     }
 
     // Gerar PDF
@@ -92,20 +124,35 @@ class VisitanteController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $pdf = Pdf::loadView('visitantes.gerar-pdf', [
+        $pdf = Pdf::loadView('admin.visitantes.gerar-pdf', [
             'visits' => $visits
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download('listar_visita.pdf');
+
     }
 
 
-    public function create()
+    public function create(Request $request)
     {
-        $departaments = Department::all();  // Adiciona essa linha para buscar todos os visitantes
+        $departaments = Department::all(); 
+         // Adiciona essa linha para buscar todos os visitantes
+
+         LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+           // 'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' Acesso a pagina de cadastro de vistante',
+        ]);
 
         // dd($visitors);
-        return view('visitantes.create', compact('departaments'));
+        return view('admin.visitantes.create', compact('departaments'));
     }
 
     public function store(Request $request)
@@ -140,6 +187,19 @@ class VisitanteController extends Controller
         // Verificação dos dados cadastrados
         // dd($visit);
 
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+          //  'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' Efectuo o cadastro do visitante ' . $visit->name,
+        ]);
+
         // Redirecionamento com mensagem de sucesso
         return redirect()->route('visits.create')->with('success', 'Visita cadastrada com sucesso.');
     }
@@ -164,6 +224,19 @@ class VisitanteController extends Controller
         // Atualize o campo exit_time e defina o status como 'completed'
         $visit->update([
             'exit_time' => $currentTime,
+        ]);
+
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+           // 'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' Atualizo o cadastro do visitante ' . $visit->name,
         ]);
 
         // Redirecionar com uma mensagem de sucesso

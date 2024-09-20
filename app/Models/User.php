@@ -27,19 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'company_id',
-        'shortname',
-        'occupation',
-        'picture',
-        'photo',
-        'doc_number',
-        'gr_admin',
-        'hire_date',
-        'phone',
-        'access_token',
-        'token_type',
-        'expires_in',
-        'ends_at',
-        'dw_cookies'
+        'departament_id'
     ];
 
     /**
@@ -66,5 +54,10 @@ class User extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Companies::class, 'company_id');
+    }
+
+    public function departament()
+    {
+        return $this->belongsTo(Department::class, 'departament_id');
     }
 }

@@ -10,13 +10,13 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('permission:view user', ['only' => ['index']]);
-    //     $this->middleware('permission:create user', ['only' => ['create', 'store']]);
-    //     $this->middleware('permission:update user', ['only' => ['update', 'edit']]);
-    //     $this->middleware('permission:delete user', ['only' => ['destroy']]);
-    // }
+    public function __construct()
+    {
+        $this->middleware('permission:view user', ['only' => ['index']]);
+        $this->middleware('permission:create user', ['only' => ['create', 'store']]);
+        $this->middleware('permission:update user', ['only' => ['update', 'edit']]);
+        $this->middleware('permission:delete user', ['only' => ['destroy']]);
+    }
 
     public function index()
     {
@@ -36,7 +36,7 @@ class UserController extends Controller
         // Obtém todos os usuários da mesma empresa
         $users = User::where('company_id', $authUser->company_id)->get();
 
-        return view('role-permission.user.index', [
+        return view('admin.role-permission.user.index', [
             'users' => $users
         ]);
     }
@@ -44,7 +44,7 @@ class UserController extends Controller
     public function create()
     {
         $roles = Role::pluck('name', 'name')->all();
-        return view('role-permission.user.create', [
+        return view('admin.role-permission.user.create', [
             'roles' => $roles
         ]);
     }
@@ -87,7 +87,7 @@ class UserController extends Controller
     {
         $roles = Role::pluck('name', 'name')->all();
         $userRoles = $user->roles->pluck('name', 'name')->all();
-        return view('role-permission.user.edit', [
+        return view('admin.role-permission.user.edit', [
             'user' => $user,
             'roles' => $roles,
             'userRoles' => $userRoles

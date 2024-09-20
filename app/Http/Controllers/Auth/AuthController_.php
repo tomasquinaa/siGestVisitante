@@ -22,7 +22,7 @@ class AuthController extends Controller
             return redirect('dashboard');
         }
 
-        return view('auth.login');
+        return view('admin.auth.login');
     }
 
 

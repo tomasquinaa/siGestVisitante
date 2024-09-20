@@ -4,33 +4,82 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Companies;
+use App\Models\LogAcesso;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;
 
 class CompaniesController extends Controller
 {
-    public function handleIndex()
+    private $agent;
+
+    public function __construct()
+    {
+        $this->agent = new Agent();
+    }
+
+    public function handleIndex(Request $request)
     {
         $companies = Companies::all();
 
-        return view('companies.index', [
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+          //  'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' acessou a lista das empresas',
+        ]);
+
+        return view('admin.companies.index', [
             'companies' => $companies
         ]);
     }
 
-    public function handleShow(string|int $id)
+    public function handleShow(string|int $id, Request $request)
     {
         if (!$companies = Companies::find($id)) {
             return back();
         }
 
-        return view('companies.show', [
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+          //  'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' acessou o detalhe da empresa ' . $companies->name,
+        ]);
+
+        return view('admin.companies.show', [
             'companies' => $companies
         ]);
     }
 
-    public function handleCreate()
+    public function handleCreate(Request $request)
     {
-        return view('companies.create');
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+          //  'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' acessou a lista de cadastro da empresa',
+        ]);
+
+        return view('admin.companies.create');
     }
 
     public function handleStore(Request $request, Companies $companies)
@@ -63,16 +112,42 @@ class CompaniesController extends Controller
         // Criando a nova empresa no banco de dados
         $companies->create($data);
 
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+         //   'estado_id' => 1,
+            'informacao' => Auth::user()->name . 'cadastro a empresa' . $companies->name,
+        ]);
+
         return redirect()->route('companies.index')->with('status', 'Empresa criada com sucesso!');
     }
 
-    public function handleEdit(Companies $companies, string|int $id)
+    public function handleEdit(Companies $companies, string|int $id, Request $request)
     {
         if (!$companies = $companies->where('id', $id)->first()) {
             return back();
         }
 
-        return view('companies.edit', [
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+          //  'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' acessou a lista da empresa ' . $companies->name,
+        ]);
+
+        return view('admin.companies.edit', [
             'companies' => $companies
         ]);
     }
@@ -114,16 +189,42 @@ class CompaniesController extends Controller
             'logo_path' => $logoPath, // Atualiza o caminho da imagem, se houver
         ]);
 
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+           // 'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' atualizo a lista da empresa ' . $companies->name,
+        ]);
+
         return redirect()->route('companies.index')->with('status', 'Empresa atualizada com sucesso!');
     }
 
-    public function handleDestroy(string|int $id)
+    public function handleDestroy(string|int $id, Request $request)
     {
         if (!$companies = Companies::find($id)) {
             return back();
         }
 
         $companies->delete();
+
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+           // 'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' deleto a empresas ' . $companies->name,
+        ]);
 
         return redirect()->route('companies.index');
     }

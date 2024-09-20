@@ -10,13 +10,13 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('permission:view role', ['only' => ['index']]);
-    //     $this->middleware('permission:create role', ['only' => ['create','store','addPermissionToRole','givePermissionToRole']]);
-    //     $this->middleware('permission:update role', ['only' => ['update','edit']]);
-    //     $this->middleware('permission:delete role', ['only' => ['destroy']]);
-    // }
+    public function __construct()
+    {
+        $this->middleware('permission:view role', ['only' => ['index']]);
+        $this->middleware('permission:create role', ['only' => ['create','store','addPermissionToRole','givePermissionToRole']]);
+        $this->middleware('permission:update role', ['only' => ['update','edit']]);
+        $this->middleware('permission:delete role', ['only' => ['destroy']]);
+    }
 
     public function index()
     {
@@ -31,9 +31,10 @@ class RoleController extends Controller
         // Obtém todas as roles
         $roles = Role::all();
 
-        return view('role-permission.role.index', [
+        return view('admin.role-permission.role.index', [
             'roles' => $roles
         ]);
+
     }
 
     // public function index_()
@@ -61,8 +62,9 @@ class RoleController extends Controller
 
     public function create()
     {
-        return view('role-permission.role.create');
+        return view('admin.role-permission.role.create');
     }
+
 
     public function store(Request $request)
     {
@@ -81,12 +83,14 @@ class RoleController extends Controller
         return redirect('roles')->with('status', 'Role Created Successfully');
     }
 
+
     public function edit(Role $role)
     {
-        return view('role-permission.role.edit', [
+        return view('admin.role-permission.role.edit', [
             'role' => $role
         ]);
     }
+
 
     public function update(Request $request, Role $role)
     {
@@ -105,6 +109,7 @@ class RoleController extends Controller
         return redirect('roles')->with('status', 'Role Updated Successfully');
     }
 
+
     public function destroy($roleId)
     {
         $role = Role::find($roleId);
@@ -122,12 +127,13 @@ class RoleController extends Controller
             ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
 
-        return view('role-permission.role.add-permissions', [
+        return view('admin.role-permission.role.add-permissions', [
             'role' => $role,
             'permissions' => $permissions,
             'rolePermissions' => $rolePermissions
         ]);
     }
+
 
     public function givePermissionToRole(Request $request, $roleId)
     {
@@ -140,4 +146,6 @@ class RoleController extends Controller
 
         return redirect()->back()->with('status', 'Permissions add to role');
     }
+
+
 }

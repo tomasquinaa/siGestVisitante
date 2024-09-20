@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Department;
 use App\Models\Visit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,8 +12,11 @@ class DashboardController extends Controller
 {
     public function handle()
     {
+        // Obtém o usuário autenticado
+        $authUser = auth()->user();
+
         // Total de visitantes
-        $totalVisitors = Visit::whereNull('exit_time')->count();
+        $totalVisitors = Visit::where('company_id', $authUser->company_id)->whereNull('exit_time')->count();
 
         // Total de saídas
         $totalExits = Visit::whereNotNull('exit_time')->count();
@@ -22,17 +26,34 @@ class DashboardController extends Controller
 
         $visits = Visit::whereNotNull('exit_time')->get();
 
-        // Departamento com mais visitas
-        $departmentWithMostVisits = Visit::select('department_id', DB::raw('count(*) as total'))
-            ->groupBy('department_id')
-            ->orderBy('total', 'desc')
-            ->first();
+        // Obter todos os departamentos
+        $totaldepartments = Department::where('company_id', $authUser->company_id)->get();
 
-            if ($departmentWithMostVisits) {
-                $departmentWithMostVisits = $departmentWithMostVisits->department;
-            } else {
-                $departmentWithMostVisits = null; // Ou algum valor padrão se preferir
-            }
+
+        // Departamento com mais visitas
+        // $departmentWithMostVisits = Visit::select('department_id', DB::raw('count(*) as total'))
+        //     ->groupBy('department_id')
+        //     ->orderBy('total', 'desc')
+        //     ->first();
+
+        // if ($departmentWithMostVisits) {
+        //     $departmentWithMostVisits = $departmentWithMostVisits->department;
+        // } else {
+        //     $departmentWithMostVisits = null; // Ou algum valor padrão se preferir
+        // }
+
+        // Contar visitantes por departamento
+        $visitorCountsByDepartment = Visit::whereNull('exit_time')->select('department_id', DB::raw('count(*) as total'))
+            ->groupBy('department_id')
+            ->get()
+            ->mapWithKeys(function ($item) {
+                $department = Department::find($item->department_id);
+                return [$department ? $department->name : 'Sem Departamento' => $item->total];
+            });
+
+        // Preparar os dados para o gráfico ou visualização
+        $departmentLabels = $visitorCountsByDepartment->keys()->toArray();
+        $departmentData = $visitorCountsByDepartment->values()->toArray();
 
         // Preparando os labels e dados para o gráfico
         $labels = $visits->map(function ($visit) {
@@ -51,13 +72,15 @@ class DashboardController extends Controller
             'data' => array_values($visitorCounts),
         ];
 
-        return view('admin.dashboard', [
+        return view('admin.dashboard.dashboard', [
             'totalVisitors' => $totalVisitors,
             'totalExits' => $totalExits,
-            'departmentWithMostVisits' => $departmentWithMostVisits,
-            'totalExits' => $totalExits,
+          //  'departmentWithMostVisits' => $departmentWithMostVisits,
             'visits' => $visits,
-            'chartData' => $chartData
+            'chartData' => $chartData,
+            'totaldepartments' => $totaldepartments,
+            'departmentLabels' => $departmentLabels,
+            'departmentData' => $departmentData,
         ]);
     }
 }

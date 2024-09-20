@@ -3,14 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\LogAcesso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Jenssegers\Agent\Agent;
 
 class AuthenticationController extends Controller
 {
+    private $agent;
+
+    public function __construct()
+    {
+        $this->agent = new Agent();
+    }
+
     public function login()
     {
-        return view('auth.login');
+        return view('admin.auth.login');
     }
 
     public function authlogin(Request $request)
@@ -30,7 +39,20 @@ class AuthenticationController extends Controller
         $user = Auth::user();
 
         // Debug: Exibe o usuário autenticado e termina a execução
-      //  dd($user);
+        //  dd($user);
+
+        LogAcesso::create([
+            'ip' => $request->ip(),
+            'browser' => $this->agent->browser(),
+            'so' => $this->agent->platform(),
+            'agente' => $this->agent->match('regexp'),
+            'descricao' => $request->server->get('REQUEST_URI'),
+            'nome_maquina' => getenv("COMPUTERNAME"),
+            'user_id' => Auth::user() ? Auth::user()->id : null,
+            'name' => Auth::user() ? Auth::user()->name : 'Guest',
+           // 'estado_id' => 1,
+            'informacao' => Auth::user()->name . ' Efectuo o login na plataforma visitante',
+        ]);
 
         return redirect('dashboard');
     }

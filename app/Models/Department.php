@@ -11,6 +11,11 @@ class Department extends Model
 
     protected $fillable = ['name','company_id'];
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'departament_id');
+    }
+
     public function visits()
     {
         return $this->hasMany(Visit::class);
